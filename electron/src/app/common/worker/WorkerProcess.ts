@@ -7,7 +7,7 @@ export class WorkerProcess {
         const exec = require('child_process').exec;
 
         this.process = exec('npm run start:prod',
-            function (error: any, stdout: any, stderr: any) {
+            (error: any, stdout: any, stderr: any) => {
                 if (error !== null) {
                     console.log('exec error: ' + error);
                 }
@@ -15,6 +15,12 @@ export class WorkerProcess {
     }
 
     public killWorker(): void {
-        this.process.kill('1');
+        if (this.isAlive()) {
+            this.process.kill('SIGINT');
+        }
+    }
+
+    private isAlive(): boolean {
+        return this.process && !this.process.killed;
     }
 }
