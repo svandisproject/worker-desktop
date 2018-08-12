@@ -1,16 +1,15 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
-import {WorkerStartParams} from "./common/worker/WokerStartParams";
-import {WorkerProcess} from "./common/worker/WorkerProcess";
+const { app, BrowserWindow, ipcMain } = require('electron');
 
-let mainWindow: BrowserWindow;
+const WorkerProcess = require('./WorkerProcess');
 const worker = new WorkerProcess();
+let mainWindow = null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({width: 1366, height: 768});
-    mainWindow.loadURL('https://svandis-frontend.herokuapp.com/');
+    mainWindow.loadURL('http://localhost:4200/');
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         worker.killWorker();
@@ -29,12 +28,17 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-    if (mainWindow === null) {
+    if (!mainWindow) {
         createWindow();
     }
 });
 
-ipcMain.on('startWorker', (event: any, args: WorkerStartParams) => {
+ipcMain.on('startWorker', (event, args) => {
     worker.execute();
-    console.log('works', args.token);
+    console.log('Worker running', args);
+});
+
+ipcMain.on('stopWorker', () => {
+    worker.killWorker();
+    console.log('Worker Killed');
 });
