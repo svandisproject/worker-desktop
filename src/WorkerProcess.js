@@ -11,6 +11,10 @@ module.exports = class WorkerProcess {
     }
 
     execute(token) {
+        if (typeof token !== 'string') {
+            throw new Error('Bad token received');
+        }
+
         const runtimePath = __dirname + '/../runtime.json';
 
         if (this.isAlive()) {
@@ -22,7 +26,7 @@ module.exports = class WorkerProcess {
             const runtime = require(runtimePath);
 
             if (runtime.token !== token) {
-                fs.writeFileSync(runtimePath, {token: token});
+                fs.writeFileSync(runtimePath, JSON.stringify({token: token}));
             }
         }
 

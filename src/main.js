@@ -6,7 +6,7 @@ let mainWindow = null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({width: 1366, height: 768});
-    mainWindow.loadURL('https://svandis-frontend.herokuapp.com');
+    mainWindow.loadURL('http://localhost:4200');
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
