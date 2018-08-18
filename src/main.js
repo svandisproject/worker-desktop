@@ -10,7 +10,6 @@ function createWindow() {
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
-
     mainWindow.on('closed', () => {
         worker.killWorker();
         mainWindow.destroy();
@@ -34,11 +33,10 @@ app.on('activate', () => {
 });
 
 ipcMain.on('startWorker', (event, args) => {
-    worker.execute();
+    worker.execute(args.token);
     console.log('Worker running', args);
 });
 
 ipcMain.on('stopWorker', () => {
     worker.killWorker();
-    console.log('Worker Killed');
 });
