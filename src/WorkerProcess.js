@@ -20,18 +20,9 @@ module.exports = class WorkerProcess {
         if (this.isAlive()) {
             return;
         }
-        if (!fileExists.sync(runtimePath)) {
-            fs.writeFileSync(runtimePath, JSON.stringify({token: token}));
-        } else {
-            const runtime = require(runtimePath);
-
-            if (runtime.token !== token) {
-                fs.writeFileSync(runtimePath, JSON.stringify({token: token}));
-            }
-        }
-
-
+        this.updateRuntime(runtimePath, token);
         const exec = require('child_process').execFile;
+
         let executablePath = '/../worker-build/worker-app';
 
         if (os.platform() === 'darwin') {
@@ -42,13 +33,20 @@ module.exports = class WorkerProcess {
             executablePath += '-linux';
         }
 
-        this.process = exec(__dirname + executablePath, [],
-            (error, stdout, stderr) => {
-                console.log('WorkerLog: ' + stdout);
-                if (error !== null) {
-                    console.log('exec error: ' + error);
-                }
-            });
+        this.process = exec(__dirname + executablePath);
+        this.process.stdout.pipe(process.stdout);
+    }
+
+    updateRuntime(runtimePath, token) {
+        if (!fileExists.sync(runtimePath)) {
+            fs.writeFileSync(runtimePath, JSON.stringify({token: token}));
+        } else {
+            const runtime = require(runtimePath);
+
+            if (runtime.token !== token) {
+                fs.writeFileSync(runtimePath, JSON.stringify({token: token}));
+            }
+        }
     }
 
     killWorker() {
