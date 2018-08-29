@@ -9,7 +9,7 @@ function createWindow() {
     mainWindow.loadURL('https://svandis-frontend.herokuapp.com');
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
     mainWindow.on('closed', () => {
         worker.killWorker();
         mainWindow.destroy();
