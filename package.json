@@ -21,7 +21,8 @@
           "squirrel"
         ],
         "darwin": [
-          "zip"
+          "zip",
+          "dmg"
         ],
         "linux": [
           "deb",
@@ -29,7 +30,9 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "npm"
+        "packageManager": "npm",
+        "icon": "assets/img/svandis_logo.png",
+        "name": "Svandis"
       },
       "electronWinstallerConfig": {
         "name": "svandis_mining_app"
