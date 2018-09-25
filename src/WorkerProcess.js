@@ -33,7 +33,7 @@ module.exports = class WorkerProcess {
             executablePath += '-linux';
         }
 
-        this.process = exec(__dirname + executablePath);
+        this.process = exec(__dirname + executablePath, ['--token', token]);
         this.process.stdout.pipe(process.stdout);
     }
 
